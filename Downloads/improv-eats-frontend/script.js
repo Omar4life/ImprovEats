@@ -50,6 +50,6 @@ async function scanFridgeAndGetRecipes() {
 
   } catch (error) {
       console.error('Error:', error);
-      recipeOutput.textContent = `An error occurred: ${error.message}`;
+      recipeOutput.textContent = `An error occurred ${error.message}`;
   }
 }

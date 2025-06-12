@@ -1,14 +1,768 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>ImprovEats</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImprovEats Recipe Finder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef3e2 0%, #fce4e6 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .header-subtitle {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-section {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .input-wrapper svg {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #f97316;
+            box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+        }
+
+        .add-btn {
+            padding: 0.75rem 1.5rem;
+            background: #f97316;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .add-btn:hover {
+            background: #ea580c;
+        }
+
+        .ingredients-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #1f2937;
+        }
+
+        .ingredients-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .ingredient-tag {
+            background: #fed7aa;
+            color: #9a3412;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-btn:hover {
+            background: #fdba74;
+        }
+
+        .recipes-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            border-left: 4px solid #f97316;
+            transition: box-shadow 0.2s;
+        }
+
+        .recipe-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .recipe-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .match-score {
+            text-align: right;
+        }
+
+        .match-percentage {
+            font-size: 1.125rem;
+            font-weight: bold;
+            color: #059669;
+        }
+
+        .match-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .recipe-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: #6b7280;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .ingredients-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .ingredient-line {
+            font-size: 0.875rem;
+        }
+
+        .have-ingredients {
+            color: #059669;
+        }
+
+        .need-ingredients {
+            color: #dc2626;
+        }
+
+        .label {
+            font-weight: 500;
+        }
+
+        .no-recipes {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 0.75rem;
+        }
+
+        .no-recipes svg {
+            color: #9ca3af;
+            margin: 0 auto 1rem;
+        }
+
+        .no-recipes p {
+            color: #6b7280;
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-recipes .subtitle {
+            color: #9ca3af;
+            font-size: 1rem;
+        }
+
+        .recipe-detail {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ea580c;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem;
+        }
+
+        .back-btn:hover {
+            color: #9a3412;
+        }
+
+        .recipe-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .recipe-detail-title {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .recipe-detail-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #6b7280;
+        }
+
+        .recipe-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .ingredients-section h3,
+        .instructions-section h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .ingredient-item {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid;
+            margin-bottom: 0.5rem;
+        }
+
+        .ingredient-have {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+            color: #166534;
+        }
+
+        .ingredient-need {
+            background: #fef3e2;
+            border-color: #fed7aa;
+            color: #9a3412;
+        }
+
+        .ingredient-status {
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+
+        .instructions-list {
+            list-style: none;
+        }
+
+        .instruction-item {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .instruction-number {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: #f97316;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .instruction-text {
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .recipe-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-section {
+                flex-direction: column;
+            }
+            
+            .recipe-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <h1>ImprovEats</h1>
-  <input type="file" id="fridgeImage" accept="image/*">
-  <button onclick="scanFridgeAndGetRecipes()">Scan Fridge & Get Recipes</button>
-  <div id="recipeResults"></div>
+    <div class="container">
+        <div id="mainView">
+            <div class="header">
+                <div class="header-title">
+                    <i data-lucide="chef-hat" style="width: 40px; height: 40px; color: #f97316;"></i>
+                    <h1>ImprovEats Recipe Finder</h1>
+                </div>
+                <p class="header-subtitle">Enter your ingredients and discover delicious recipes you can make!</p>
+            </div>
 
-  <script src="script.js"></script>
+            <div class="card">
+                <div class="input-section">
+                    <div class="input-wrapper">
+                        <i data-lucide="search"></i>
+                        <input 
+                            type="text" 
+                            id="ingredientInput" 
+                            class="input-field" 
+                            placeholder="Add an ingredient (e.g., chicken, tomatoes, cheese)"
+                        >
+                    </div>
+                    <button class="add-btn" onclick="addIngredient()">
+                        <i data-lucide="plus"></i>
+                        Add
+                    </button>
+                </div>
+
+                <div id="ingredientsSection" class="hidden">
+                    <h3>Your Ingredients:</h3>
+                    <div id="ingredientsList" class="ingredients-list"></div>
+                </div>
+            </div>
+
+            <div>
+                <h2 id="recipesHeader" class="recipes-header">All Recipes</h2>
+                <div id="recipesList"></div>
+            </div>
+        </div>
+
+        <div id="recipeDetailView" class="hidden">
+            <button class="back-btn" onclick="showMainView()">
+                ← Back to recipes
+            </button>
+            
+            <div class="card recipe-detail">
+                <div class="recipe-detail-header">
+                    <div>
+                        <h1 id="detailTitle" class="recipe-detail-title"></h1>
+                        <div id="detailMeta" class="recipe-detail-meta"></div>
+                    </div>
+                    <div id="detailMatch" class="match-score"></div>
+                </div>
+
+                <div class="recipe-content">
+                    <div class="ingredients-section">
+                        <h3>Ingredients</h3>
+                        <div id="detailIngredients"></div>
+                    </div>
+
+                    <div class="instructions-section">
+                        <h3>Instructions</h3>
+                        <ol id="detailInstructions" class="instructions-list"></ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample recipe database
+        const recipes = [
+            {
+                id: 1,
+                name: "Spaghetti Carbonara",
+                ingredients: ["spaghetti", "eggs", "bacon", "parmesan cheese", "black pepper"],
+                cookTime: "20 min",
+                servings: 4,
+                instructions: [
+                    "Cook spaghetti according to package directions",
+                    "Fry bacon until crispy, reserve fat",
+                    "Whisk eggs with parmesan and pepper",
+                    "Toss hot pasta with egg mixture and bacon",
+                    "Serve immediately with extra cheese"
+                ]
+            },
+            {
+                id: 2,
+                name: "Chicken Stir Fry",
+                ingredients: ["chicken breast", "soy sauce", "garlic", "ginger", "vegetables", "rice"],
+                cookTime: "15 min",
+                servings: 3,
+                instructions: [
+                    "Cut chicken into bite-sized pieces",
+                    "Heat oil in wok or large pan",
+                    "Cook chicken until golden",
+                    "Add garlic, ginger, and vegetables",
+                    "Stir in soy sauce and serve over rice"
+                ]
+            },
+            {
+                id: 3,
+                name: "Tomato Basil Pasta",
+                ingredients: ["pasta", "tomatoes", "basil", "garlic", "olive oil", "parmesan cheese"],
+                cookTime: "25 min",
+                servings: 4,
+                instructions: [
+                    "Cook pasta according to package directions",
+                    "Sauté garlic in olive oil",
+                    "Add tomatoes and simmer",
+                    "Toss with pasta and fresh basil",
+                    "Top with parmesan cheese"
+                ]
+            },
+            {
+                id: 4,
+                name: "Scrambled Eggs",
+                ingredients: ["eggs", "butter", "salt", "pepper"],
+                cookTime: "5 min",
+                servings: 2,
+                instructions: [
+                    "Beat eggs with salt and pepper",
+                    "Heat butter in non-stick pan",
+                    "Pour in eggs and gently scramble",
+                    "Remove from heat while slightly wet",
+                    "Serve immediately"
+                ]
+            },
+            {
+                id: 5,
+                name: "Chicken Caesar Salad",
+                ingredients: ["chicken breast", "lettuce", "parmesan cheese", "croutons", "caesar dressing"],
+                cookTime: "10 min",
+                servings: 2,
+                instructions: [
+                    "Grill or pan-fry chicken breast",
+                    "Chop lettuce and place in bowl",
+                    "Slice chicken and add to salad",
+                    "Add croutons and parmesan",
+                    "Toss with caesar dressing"
+                ]
+            },
+            {
+                id: 6,
+                name: "Vegetable Soup",
+                ingredients: ["vegetables", "broth", "onion", "garlic", "herbs"],
+                cookTime: "30 min",
+                servings: 6,
+                instructions: [
+                    "Sauté onion and garlic",
+                    "Add chopped vegetables",
+                    "Pour in broth and bring to boil",
+                    "Simmer until vegetables are tender",
+                    "Season with herbs and serve"
+                ]
+            },
+            {
+                id: 7,
+                name: "Grilled Cheese Sandwich",
+                ingredients: ["bread", "cheese", "butter"],
+                cookTime: "8 min",
+                servings: 1,
+                instructions: [
+                    "Butter one side of each bread slice",
+                    "Place cheese between unbuttered sides",
+                    "Heat pan over medium heat",
+                    "Cook sandwich until golden on both sides",
+                    "Slice and serve hot"
+                ]
+            }
+        ];
+
+        let userIngredients = [];
+        let currentRecipe = null;
+
+        function addIngredient() {
+            const input = document.getElementById('ingredientInput');
+            const ingredient = input.value.trim().toLowerCase();
+            
+            if (ingredient && !userIngredients.includes(ingredient)) {
+                userIngredients.push(ingredient);
+                input.value = '';
+                updateDisplay();
+            }
+        }
+
+        function removeIngredient(ingredient) {
+            userIngredients = userIngredients.filter(item => item !== ingredient);
+            updateDisplay();
+        }
+
+        function showRecipeDetail(recipeId) {
+            const matchingRecipes = getMatchingRecipes();
+            const allRecipes = userIngredients.length > 0 ? matchingRecipes : recipes;
+            const recipe = allRecipes.find(r => r.id === recipeId) || recipes.find(r => r.id === recipeId);
+            
+            if (!recipe) return;
+            
+            currentRecipe = recipe;
+            document.getElementById('mainView').classList.add('hidden');
+            document.getElementById('recipeDetailView').classList.remove('hidden');
+            
+            document.getElementById('detailTitle').textContent = recipe.name;
+            
+            const metaHtml = `
+                <div class="meta-item">
+                    <i data-lucide="clock"></i>
+                    <span>${recipe.cookTime}</span>
+                </div>
+                <div class="meta-item">
+                    <i data-lucide="users"></i>
+                    <span>${recipe.servings} servings</span>
+                </div>
+            `;
+            document.getElementById('detailMeta').innerHTML = metaHtml;
+            
+            if (userIngredients.length > 0) {
+                const matchHtml = `
+                    <div class="match-percentage">${Math.round(recipe.matchPercentage)}%</div>
+                    <div class="match-label">match</div>
+                `;
+                document.getElementById('detailMatch').innerHTML = matchHtml;
+            } else {
+                document.getElementById('detailMatch').innerHTML = '';
+            }
+            
+            const ingredientsHtml = recipe.ingredients.map(ingredient => {
+                const isMatched = recipe.matchedIngredients && recipe.matchedIngredients.includes(ingredient);
+                const className = isMatched ? 'ingredient-have' : 'ingredient-need';
+                const status = isMatched ? '✓ Have it' : 'Need to buy';
+                return `
+                    <div class="ingredient-item ${className}">
+                        ${ingredient}
+                        <span class="ingredient-status">${status}</span>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('detailIngredients').innerHTML = ingredientsHtml;
+            
+            const instructionsHtml = recipe.instructions.map((instruction, index) => `
+                <li class="instruction-item">
+                    <span class="instruction-number">${index + 1}</span>
+                    <span class="instruction-text">${instruction}</span>
+                </li>
+            `).join('');
+            document.getElementById('detailInstructions').innerHTML = instructionsHtml;
+            
+            lucide.createIcons();
+        }
+
+        function showMainView() {
+            document.getElementById('recipeDetailView').classList.add('hidden');
+            document.getElementById('mainView').classList.remove('hidden');
+        }
+
+        function getMatchingRecipes() {
+            if (userIngredients.length === 0) return recipes;
+            
+            return recipes.map(recipe => {
+                const matchedIngredients = recipe.ingredients.filter(recipeIngredient =>
+                    userIngredients.some(userIngredient => 
+                        recipeIngredient.toLowerCase().includes(userIngredient) ||
+                        userIngredient.includes(recipeIngredient.toLowerCase())
+                    )
+                );
+                
+                const matchPercentage = (matchedIngredients.length / recipe.ingredients.length) * 100;
+                
+                return {
+                    ...recipe,
+                    matchedIngredients,
+                    matchPercentage,
+                    missingIngredients: recipe.ingredients.filter(ingredient => 
+                        !matchedIngredients.includes(ingredient)
+                    )
+                };
+            })
+            .filter(recipe => recipe.matchedIngredients.length > 0)
+            .sort((a, b) => b.matchPercentage - a.matchPercentage);
+        }
+
+        function updateDisplay() {
+            // Update ingredients section
+            const ingredientsSection = document.getElementById('ingredientsSection');
+            const ingredientsList = document.getElementById('ingredientsList');
+            
+            if (userIngredients.length > 0) {
+                ingredientsSection.classList.remove('hidden');
+                ingredientsList.innerHTML = userIngredients.map(ingredient => `
+                    <span class="ingredient-tag">
+                        ${ingredient}
+                        <button class="remove-btn" onclick="removeIngredient('${ingredient}')">
+                            <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+                        </button>
+                    </span>
+                `).join('');
+            } else {
+                ingredientsSection.classList.add('hidden');
+            }
+            
+            // Update recipes
+            const matchingRecipes = getMatchingRecipes();
+            const recipesHeader = document.getElementById('recipesHeader');
+            const recipesList = document.getElementById('recipesList');
+            
+            recipesHeader.textContent = userIngredients.length > 0 ? 
+                `Recipes you can make (${matchingRecipes.length})` : 'All Recipes';
+            
+            if (matchingRecipes.length === 0 && userIngredients.length > 0) {
+                recipesList.innerHTML = `
+                    <div class="no-recipes">
+                        <i data-lucide="chef-hat" style="width: 48px; height: 48px;"></i>
+                        <p>No recipes found with your current ingredients.</p>
+                        <p class="subtitle">Try adding more ingredients or removing some to see more options.</p>
+                    </div>
+                `;
+            } else {
+                recipesList.innerHTML = matchingRecipes.map(recipe => {
+                    const matchScore = userIngredients.length > 0 ? `
+                        <div class="match-score">
+                            <div class="match-percentage">${Math.round(recipe.matchPercentage)}%</div>
+                            <div class="match-label">match</div>
+                        </div>
+                    ` : '';
+                    
+                    const ingredientInfo = userIngredients.length > 0 ? `
+                        <div class="ingredients-info">
+                            ${recipe.matchedIngredients.length > 0 ? `
+                                <div class="ingredient-line have-ingredients">
+                                    <span class="label">Have: </span>${recipe.matchedIngredients.join(', ')}
+                                </div>
+                            ` : ''}
+                            ${recipe.missingIngredients.length > 0 ? `
+                                <div class="ingredient-line need-ingredients">
+                                    <span class="label">Need: </span>${recipe.missingIngredients.join(', ')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    ` : '';
+                    
+                    return `
+                        <div class="recipe-card" onclick="showRecipeDetail(${recipe.id})">
+                            <div class="recipe-header">
+                                <h3 class="recipe-title">${recipe.name}</h3>
+                                ${matchScore}
+                            </div>
+                            
+                            <div class="recipe-meta">
+                                <div class="meta-item">
+                                    <i data-lucide="clock"></i>
+                                    <span>${recipe.cookTime}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i data-lucide="users"></i>
+                                    <span>${recipe.servings} servings</span>
+                                </div>
+                            </div>
+                            
+                            ${ingredientInfo}
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            lucide.createIcons();
+        }
+
+        // Event listeners
+        document.getElementById('ingredientInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addIngredient();
+            }
+        });
+
+        // Initialize
+        updateDisplay();
+        lucide.createIcons();
+    </script>
 </body>
 </html>

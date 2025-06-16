@@ -324,10 +324,41 @@
             cursor: pointer;
             border-left: 4px solid #8FB9CA;
             transition: box-shadow 0.2s;
+            position: relative;
         }
 
         .recipe-card:hover {
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .star-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+            z-index: 10;
+        }
+
+        .star-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .star-icon {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #d1d5db;
+            stroke-width: 2;
+        }
+
+        .star-icon.starred {
+            fill: #fbbf24;
+            stroke: #f59e0b;
         }
 
         .recipe-header {
@@ -461,6 +492,67 @@
             color: #6b7280;
         }
 
+        .detail-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 1rem;
+        }
+
+        .finish-cooking-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .finish-cooking-btn:hover {
+            background: #059669;
+        }
+
+        .remove-history-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .remove-history-btn:hover {
+            background: #b91c1c;
+        }
+
+        .history-item {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #10b981;
+            cursor: pointer;
+        }
+
+        .history-date {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
         .recipe-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -546,6 +638,33 @@
         .hidden {
             display: none;
         }
+
+        .tabs-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            background: #f3f4f6;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .tab-btn.active {
+            background: #8FB9CA;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -567,8 +686,6 @@
             </form>
 
             <div class="divider">Or...</div>
-
-
 
             <div class="register-link">
                 Don't have an account? <a href="#" onclick="showRegister()">Register</a>
@@ -604,8 +721,6 @@
             </form>
 
             <div class="divider">Or...</div>
-
-
 
             <div class="register-link">
                 Already have an account? <a href="#" onclick="showLogin()">Login</a>
@@ -653,6 +768,11 @@
             </div>
 
             <div>
+                <div class="tabs-container">
+                    <button class="tab-btn active" onclick="showAllRecipes()">All Recipes</button>
+                    <button class="tab-btn" onclick="showSavedRecipes()">Saved Recipes</button>
+                    <button class="tab-btn" onclick="showHistory()">History</button>
+                </div>
                 <h2 id="recipesHeader" class="recipes-header">All Recipes</h2>
                 <div id="recipesList"></div>
             </div>
@@ -669,7 +789,9 @@
                         <h1 id="detailTitle" class="recipe-detail-title"></h1>
                         <div id="detailMeta" class="recipe-detail-meta"></div>
                     </div>
-                    <div id="detailMatch" class="match-score"></div>
+                    <div class="detail-actions">
+                        <div id="detailMatch" class="match-score"></div>
+                    </div>
                 </div>
 
                 <div class="recipe-content">
@@ -793,6 +915,9 @@
         let userIngredients = [];
         let currentRecipe = null;
         let currentUser = null;
+        let savedRecipes = [];
+        let cookingHistory = [];
+        let currentTab = 'all';
 
         // Authentication functions
         function showLogin() {
@@ -810,7 +935,6 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
-            // Simple validation - in a real app, you'd validate against a database
             if (email && password) {
                 currentUser = {
                     name: email.split('@')[0],
@@ -847,16 +971,6 @@
             }
         }
 
-        function loginWithGoogle() {
-            // Simulate Google login
-            currentUser = {
-                name: 'Google User',
-                email: 'user@gmail.com',
-                loginType: 'google'
-            };
-            showMainApp();
-        }
-
         function continueAsGuest() {
             currentUser = {
                 name: 'Guest',
@@ -872,9 +986,11 @@
             document.getElementById('loginView').classList.remove('hidden');
             document.getElementById('registerView').classList.add('hidden');
 
-            // Reset app state
             userIngredients = [];
             currentRecipe = null;
+            savedRecipes = [];
+            cookingHistory = [];
+            currentTab = 'all';
             showMainView();
         }
 
@@ -892,7 +1008,6 @@
             document.getElementById('registerView').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
 
-            // Show user info if not guest
             if (currentUser && currentUser.loginType !== 'guest') {
                 const userInfo = document.getElementById('userInfo');
                 userInfo.innerHTML = `
@@ -906,7 +1021,7 @@
             lucide.createIcons();
         }
 
-        // Recipe app functions (existing code)
+        // Recipe app functions
         function addIngredient() {
             const input = document.getElementById('ingredientInput');
             const ingredient = input.value.trim().toLowerCase();
@@ -923,6 +1038,39 @@
             updateDisplay();
         }
 
+        function toggleSaveRecipe(recipeId, event) {
+            event.stopPropagation();
+
+            if (savedRecipes.includes(recipeId)) {
+                savedRecipes = savedRecipes.filter(id => id !== recipeId);
+            } else {
+                savedRecipes.push(recipeId);
+            }
+
+            updateDisplay();
+        }
+
+        function showAllRecipes() {
+            currentTab = 'all';
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            updateDisplay();
+        }
+
+        function showSavedRecipes() {
+            currentTab = 'saved';
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            updateDisplay();
+        }
+
+        function showHistory() {
+            currentTab = 'history';
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            updateDisplay();
+        }
+
         function showRecipeDetail(recipeId) {
             const matchingRecipes = getMatchingRecipes();
             const allRecipes = userIngredients.length > 0 ? matchingRecipes : recipes;
@@ -936,6 +1084,17 @@
 
             document.getElementById('detailTitle').textContent = recipe.name;
 
+            const isFromHistory = currentTab === 'history';
+            const actionButton = isFromHistory ? 
+                `<button class="remove-history-btn" onclick="removeFromHistory(${recipe.id})">
+                    <i data-lucide="trash-2"></i>
+                    Remove from History
+                </button>` :
+                `<button class="finish-cooking-btn" onclick="finishCooking(${recipe.id})">
+                    <i data-lucide="check-circle"></i>
+                    Finish Cooking
+                </button>`;
+
             const metaHtml = `
                 <div class="meta-item">
                     <i data-lucide="clock"></i>
@@ -945,6 +1104,7 @@
                     <i data-lucide="users"></i>
                     <span>${recipe.servings} servings</span>
                 </div>
+                ${actionButton}
             `;
             document.getElementById('detailMeta').innerHTML = metaHtml;
 
@@ -982,6 +1142,25 @@
             lucide.createIcons();
         }
 
+        function finishCooking(recipeId) {
+            const recipe = recipes.find(r => r.id === recipeId);
+            if (recipe) {
+                cookingHistory.push({ recipe: recipe, cookedDate: new Date() });
+                alert(`Recipe "${recipe.name}" added to history!`);
+            }
+        }
+
+        function removeFromHistory(recipeId) {
+            const recipeIndex = cookingHistory.findIndex(entry => entry.recipe.id === recipeId);
+            if (recipeIndex !== -1) {
+                const recipeName = cookingHistory[recipeIndex].recipe.name;
+                cookingHistory.splice(recipeIndex, 1);
+                alert(`Recipe "${recipeName}" removed from history!`);
+                showMainView();
+                updateDisplay();
+            }
+        }
+
         function showMainView() {
             document.getElementById('recipeDetailView').classList.add('hidden');
             document.getElementById('mainView').classList.remove('hidden');
@@ -1014,7 +1193,6 @@
         }
 
         function updateDisplay() {
-            // Update ingredients section
             const ingredientsSection = document.getElementById('ingredientsSection');
             const ingredientsList = document.getElementById('ingredientsList');
 
@@ -1023,7 +1201,7 @@
                 ingredientsList.innerHTML = userIngredients.map(ingredient => `
                     <span class="ingredient-tag">
                         ${ingredient}
-                        <button class="remove class="remove-btn" onclick="removeIngredient('${ingredient}')">
+                        <button class="remove-btn" onclick="removeIngredient('${ingredient}')">
                             <i data-lucide="x" style="width: 14px; height: 14px;"></i>
                         </button>
                     </span>
@@ -1032,68 +1210,126 @@
                 ingredientsSection.classList.add('hidden');
             }
 
-            // Update recipes
-            const matchingRecipes = getMatchingRecipes();
+            let recipesToShow = [];
             const recipesHeader = document.getElementById('recipesHeader');
+
+            if (currentTab === 'saved') {
+                recipesToShow = recipes.filter(recipe => savedRecipes.includes(recipe.id));
+                recipesHeader.textContent = `Saved Recipes (${recipesToShow.length})`;
+            } else if (currentTab === 'history') {
+                recipesToShow = cookingHistory;
+                recipesHeader.textContent = `Cooking History (${cookingHistory.length})`;
+            } else {
+                const matchingRecipes = getMatchingRecipes();
+                recipesToShow = matchingRecipes;
+                recipesHeader.textContent = userIngredients.length > 0 ? 
+                    `Recipes you can make (${matchingRecipes.length})` : 'All Recipes';
+            }
+
             const recipesList = document.getElementById('recipesList');
 
-            recipesHeader.textContent = userIngredients.length > 0 ? 
-                `Recipes you can make (${matchingRecipes.length})` : 'All Recipes';
+            if (recipesToShow.length === 0) {
+                let emptyMessage;
+                if (currentTab === 'saved') {
+                    emptyMessage = 'No saved recipes yet. Click the star icon on any recipe to save it!';
+                } else if (currentTab === 'history') {
+                    emptyMessage = 'No cooking history yet. Finish cooking a recipe to see it here!';
+                } else {
+                    emptyMessage = userIngredients.length > 0 ? 
+                        'No recipes found with your current ingredients.' : 'No recipes available.';
+                }
 
-            if (matchingRecipes.length === 0 && userIngredients.length > 0) {
                 recipesList.innerHTML = `
                     <div class="no-recipes">
                         <i data-lucide="chef-hat" style="width: 48px; height: 48px;"></i>
-                        <p>No recipes found with your current ingredients.</p>
-                        <p class="subtitle">Try adding more ingredients or removing some to see more options.</p>
+                        <p>${emptyMessage}</p>
+                        ${currentTab === 'all' && userIngredients.length > 0 ? 
+                            '<p class="subtitle">Try adding more ingredients or removing some to see more options.</p>' : ''}
                     </div>
                 `;
             } else {
-                recipesList.innerHTML = matchingRecipes.map(recipe => {
-                    const matchScore = userIngredients.length > 0 ? `
-                        <div class="match-score">
-                            <div class="match-percentage">${Math.round(recipe.matchPercentage)}%</div>
-                            <div class="match-label">match</div>
-                        </div>
-                    ` : '';
+                if (currentTab === 'history') {
+                    recipesList.innerHTML = recipesToShow.map(historyEntry => {
+                        const recipe = historyEntry.recipe;
+                        const cookedDate = new Date(historyEntry.cookedDate);
+                        const dateStr = cookedDate.toLocaleDateString('en-US', { 
+                            weekday: 'long', 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        });
 
-                    const ingredientInfo = userIngredients.length > 0 ? `
-                        <div class="ingredients-info">
-                            ${recipe.matchedIngredients.length > 0 ? `
-                                <div class="ingredient-line have-ingredients">
-                                    <span class="label">Have: </span>${recipe.matchedIngredients.join(', ')}
+                        return `
+                            <div class="history-item" onclick="showRecipeDetail(${recipe.id})">
+                                <div class="history-date">Cooked on ${dateStr}</div>
+                                <div class="recipe-header">
+                                    <h3 class="recipe-title">${recipe.name}</h3>
                                 </div>
-                            ` : ''}
-                            ${recipe.missingIngredients.length > 0 ? `
-                                <div class="ingredient-line need-ingredients">
-                                    <span class="label">Need: </span>${recipe.missingIngredients.join(', ')}
-                                </div>
-                            ` : ''}
-                        </div>
-                    ` : '';
-
-                    return `
-                        <div class="recipe-card" onclick="showRecipeDetail(${recipe.id})">
-                            <div class="recipe-header">
-                                <h3 class="recipe-title">${recipe.name}</h3>
-                                ${matchScore}
-                            </div>
-
-                            <div class="recipe-meta">
-                                <div class="meta-item">
-                                    <i data-lucide="clock"></i>
-                                    <span>${recipe.cookTime}</span>
-                                </div>
-                                <div class="meta-item">
-                                    <i data-lucide="users"></i>
-                                    <span>${recipe.servings} servings</span>
+                                <div class="recipe-meta">
+                                    <div class="meta-item">
+                                        <i data-lucide="clock"></i>
+                                        <span>${recipe.cookTime}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i data-lucide="users"></i>
+                                        <span>${recipe.servings} servings</span>
+                                    </div>
                                 </div>
                             </div>
+                        `;
+                    }).join('');
+                } else {
+                    recipesList.innerHTML = recipesToShow.map(recipe => {
+                        const isSaved = savedRecipes.includes(recipe.id);
+                        const matchScore = userIngredients.length > 0 && currentTab !== 'saved' ? `
+                            <div class="match-score">
+                                <div class="match-percentage">${Math.round(recipe.matchPercentage)}%</div>
+                                <div class="match-label">match</div>
+                            </div>
+                        ` : '';
 
-                            ${ingredientInfo}
-                        </div>
-                    `;
-                }).join('');
+                        const ingredientInfo = userIngredients.length > 0 && currentTab !== 'saved' ? `
+                            <div class="ingredients-info">
+                                ${recipe.matchedIngredients && recipe.matchedIngredients.length > 0 ? `
+                                    <div class="ingredient-line have-ingredients">
+                                        <span class="label">Have: </span>${recipe.matchedIngredients.join(', ')}
+                                    </div>
+                                ` : ''}
+                                ${recipe.missingIngredients && recipe.missingIngredients.length > 0 ? `
+                                    <div class="ingredient-line need-ingredients">
+                                        <span class="label">Need: </span>${recipe.missingIngredients.join(', ')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        ` : '';
+
+                        return `
+                            <div class="recipe-card" onclick="showRecipeDetail(${recipe.id})">
+                                <button class="star-btn" onclick="toggleSaveRecipe(${recipe.id}, event)">
+                                    <i data-lucide="star" class="star-icon ${isSaved ? 'starred' : ''}"></i>
+                                </button>
+
+                                <div class="recipe-header">
+                                    <h3 class="recipe-title">${recipe.name}</h3>
+                                    ${matchScore}
+                                </div>
+
+                                <div class="recipe-meta">
+                                    <div class="meta-item">
+                                        <i data-lucide="clock"></i>
+                                        <span>${recipe.cookTime}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i data-lucide="users"></i>
+                                        <span>${recipe.servings} servings</span>
+                                    </div>
+                                </div>
+
+                                ${ingredientInfo}
+                            </div>
+                        `;
+                    }).join('');
+                }
             }
 
             lucide.createIcons();
@@ -1108,7 +1344,7 @@
 
         // Initialize - show login page first
         document.addEventListener('DOMContentLoaded', function() {
-            lucide.createIcons()
+            lucide.createIcons();
         });
     </script>
 </body>

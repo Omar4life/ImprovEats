@@ -209,6 +209,41 @@
             background: #b91c1c;
         }
 
+        .streak-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+            border-radius: 1rem;
+            border: 2px solid #f97316;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .streak-icon {
+            font-size: 2rem;
+        }
+
+        .streak-info {
+            text-align: center;
+        }
+
+        .streak-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ea580c;
+        }
+
+        .streak-label {
+            font-size: 0.875rem;
+            color: #9a3412;
+            font-weight: 500;
+        }
+
         .card {
             background: white;
             border-radius: 1rem;
@@ -553,6 +588,101 @@
             margin-bottom: 0.5rem;
         }
 
+        .achievement-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #fbbf24;
+            position: relative;
+        }
+
+        .achievement-card.locked {
+            border-left-color: #9ca3af;
+            opacity: 0.6;
+        }
+
+        .achievement-card.completed {
+            border-left-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .achievement-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .achievement-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .achievement-icon.completed {
+            background: #10b981;
+            color: white;
+        }
+
+        .achievement-icon.locked {
+            background: #9ca3af;
+            color: white;
+        }
+
+        .achievement-info h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ea580c;
+            margin-bottom: 0.25rem;
+        }
+
+        .achievement-info.completed h3 {
+            color: #10b981;
+        }
+
+        .achievement-info.locked h3 {
+            color: #6b7280;
+        }
+
+        .achievement-description {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .achievement-progress {
+            margin-top: 0.75rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #fbbf24;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.completed {
+            background: #10b981;
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+
         .recipe-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -741,6 +871,13 @@
                     <h1>ImprovEats Recipe Finder</h1>
                 </div>
                 <div id="userInfo" class="user-info hidden"></div>
+                <div id="streakDisplay" class="streak-display hidden">
+                    <div class="streak-icon">🔥</div>
+                    <div class="streak-info">
+                        <div class="streak-number" id="streakNumber">0</div>
+                        <div class="streak-label">Day Streak</div>
+                    </div>
+                </div>
                 <p class="header-subtitle">Enter your ingredients and discover delicious recipes you can make!</p>
             </div>
 
@@ -772,6 +909,7 @@
                     <button class="tab-btn active" onclick="showAllRecipes()">All Recipes</button>
                     <button class="tab-btn" onclick="showSavedRecipes()">Saved Recipes</button>
                     <button class="tab-btn" onclick="showHistory()">History</button>
+                    <button class="tab-btn" onclick="showAchievements()">Achievements</button>
                 </div>
                 <h2 id="recipesHeader" class="recipes-header">All Recipes</h2>
                 <div id="recipesList"></div>
@@ -918,6 +1056,80 @@
         let savedRecipes = [];
         let cookingHistory = [];
         let currentTab = 'all';
+        let achievements = [
+            {
+                id: 'first_recipe',
+                name: 'First Steps',
+                description: 'Cook your first recipe',
+                icon: '👶',
+                completed: false,
+                progress: 0,
+                maxProgress: 1
+            },
+            {
+                id: 'recipe_master',
+                name: 'Recipe Master',
+                description: 'Cook 5 different recipes',
+                icon: '👨‍🍳',
+                completed: false,
+                progress: 0,
+                maxProgress: 5
+            },
+            {
+                id: 'ingredient_explorer',
+                name: 'Ingredient Explorer',
+                description: 'Add 10 different ingredients',
+                icon: '🥕',
+                completed: false,
+                progress: 0,
+                maxProgress: 10
+            },
+            {
+                id: 'star_collector',
+                name: 'Star Collector',
+                description: 'Save 3 recipes to favorites',
+                icon: '⭐',
+                completed: false,
+                progress: 0,
+                maxProgress: 3
+            },
+            {
+                id: 'speed_cook',
+                name: 'Speed Cook',
+                description: 'Cook 3 recipes under 10 minutes',
+                icon: '⚡',
+                completed: false,
+                progress: 0,
+                maxProgress: 3
+            },
+            {
+                id: 'pasta_lover',
+                name: 'Pasta Lover',
+                description: 'Cook 2 pasta recipes',
+                icon: '🍝',
+                completed: false,
+                progress: 0,
+                maxProgress: 2
+            },
+            {
+                id: 'healthy_eater',
+                name: 'Healthy Eater',
+                description: 'Cook a salad recipe',
+                icon: '🥗',
+                completed: false,
+                progress: 0,
+                maxProgress: 1
+            },
+            {
+                id: 'cooking_streak',
+                name: 'Cooking Streak',
+                description: 'Cook recipes on 3 different days',
+                icon: '🔥',
+                completed: false,
+                progress: 0,
+                maxProgress: 3
+            }
+        ];
 
         // Authentication functions
         function showLogin() {
@@ -1018,6 +1230,7 @@
             }
 
             updateDisplay();
+            updateStreakDisplay();
             lucide.createIcons();
         }
 
@@ -1029,6 +1242,7 @@
             if (ingredient && !userIngredients.includes(ingredient)) {
                 userIngredients.push(ingredient);
                 input.value = '';
+                checkAchievements();
                 updateDisplay();
             }
         }
@@ -1047,6 +1261,7 @@
                 savedRecipes.push(recipeId);
             }
 
+            checkAchievements();
             updateDisplay();
         }
 
@@ -1066,6 +1281,13 @@
 
         function showHistory() {
             currentTab = 'history';
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            updateDisplay();
+        }
+
+        function showAchievements() {
+            currentTab = 'achievements';
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             updateDisplay();
@@ -1146,8 +1368,127 @@
             const recipe = recipes.find(r => r.id === recipeId);
             if (recipe) {
                 cookingHistory.push({ recipe: recipe, cookedDate: new Date() });
+                checkAchievements();
                 alert(`Recipe "${recipe.name}" added to history!`);
             }
+        }
+
+        function calculateCookingStreak() {
+            if (cookingHistory.length === 0) return 0;
+
+            const cookingDates = cookingHistory.map(entry => {
+                const date = new Date(entry.cookedDate);
+                return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            }).sort((a, b) => b - a);
+
+            const uniqueDates = [...new Set(cookingDates.map(date => date.getTime()))]
+                .map(time => new Date(time))
+                .sort((a, b) => b - a);
+
+            if (uniqueDates.length === 0) return 0;
+
+            const today = new Date();
+            const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const yesterday = new Date(todayDate);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            let streak = 0;
+            let currentDate = todayDate;
+
+            // Check if we cooked today or yesterday to start the streak
+            if (uniqueDates[0].getTime() === todayDate.getTime()) {
+                streak = 1;
+                currentDate = todayDate;
+            } else if (uniqueDates[0].getTime() === yesterday.getTime()) {
+                streak = 1;
+                currentDate = yesterday;
+            } else {
+                return 0; // No recent cooking, streak is broken
+            }
+
+            // Count consecutive days
+            for (let i = 1; i < uniqueDates.length; i++) {
+                const expectedDate = new Date(currentDate);
+                expectedDate.setDate(expectedDate.getDate() - 1);
+                
+                if (uniqueDates[i].getTime() === expectedDate.getTime()) {
+                    streak++;
+                    currentDate = expectedDate;
+                } else {
+                    break;
+                }
+            }
+
+            return streak;
+        }
+
+        function updateStreakDisplay() {
+            const streak = calculateCookingStreak();
+            const streakDisplay = document.getElementById('streakDisplay');
+            const streakNumber = document.getElementById('streakNumber');
+            
+            if (cookingHistory.length > 0) {
+                streakDisplay.classList.remove('hidden');
+                streakNumber.textContent = streak;
+            } else {
+                streakDisplay.classList.add('hidden');
+            }
+        }
+
+        function checkAchievements() {
+            const uniqueIngredients = new Set();
+            userIngredients.forEach(ing => uniqueIngredients.add(ing));
+            
+            const uniqueRecipesCooked = new Set();
+            const cookingDates = new Set();
+            const fastRecipes = [];
+            const pastaRecipes = [];
+            const saladRecipes = [];
+
+            cookingHistory.forEach(entry => {
+                uniqueRecipesCooked.add(entry.recipe.id);
+                cookingDates.add(entry.cookedDate.toDateString());
+                
+                const cookTime = parseInt(entry.recipe.cookTime);
+                if (cookTime <= 10) {
+                    fastRecipes.push(entry.recipe.id);
+                }
+                
+                if (entry.recipe.name.toLowerCase().includes('pasta') || entry.recipe.name.toLowerCase().includes('spaghetti')) {
+                    pastaRecipes.push(entry.recipe.id);
+                }
+                
+                if (entry.recipe.name.toLowerCase().includes('salad')) {
+                    saladRecipes.push(entry.recipe.id);
+                }
+            });
+
+            // Update achievements
+            updateAchievement('first_recipe', Math.min(cookingHistory.length, 1));
+            updateAchievement('recipe_master', Math.min(uniqueRecipesCooked.size, 5));
+            updateAchievement('ingredient_explorer', Math.min(uniqueIngredients.size, 10));
+            updateAchievement('star_collector', Math.min(savedRecipes.length, 3));
+            updateAchievement('speed_cook', Math.min(fastRecipes.length, 3));
+            updateAchievement('pasta_lover', Math.min(pastaRecipes.length, 2));
+            updateAchievement('healthy_eater', Math.min(saladRecipes.length, 1));
+            updateAchievement('cooking_streak', Math.min(cookingDates.size, 3));
+            
+            updateStreakDisplay();
+        }
+
+        function updateAchievement(achievementId, newProgress) {
+            const achievement = achievements.find(a => a.id === achievementId);
+            if (achievement && !achievement.completed) {
+                achievement.progress = newProgress;
+                if (achievement.progress >= achievement.maxProgress) {
+                    achievement.completed = true;
+                    showAchievementNotification(achievement);
+                }
+            }
+        }
+
+        function showAchievementNotification(achievement) {
+            alert(`🎉 Achievement Unlocked: ${achievement.name}! ${achievement.icon}`);
         }
 
         function removeFromHistory(recipeId) {
@@ -1155,6 +1496,7 @@
             if (recipeIndex !== -1) {
                 const recipeName = cookingHistory[recipeIndex].recipe.name;
                 cookingHistory.splice(recipeIndex, 1);
+                checkAchievements();
                 alert(`Recipe "${recipeName}" removed from history!`);
                 showMainView();
                 updateDisplay();
@@ -1219,6 +1561,10 @@
             } else if (currentTab === 'history') {
                 recipesToShow = cookingHistory;
                 recipesHeader.textContent = `Cooking History (${cookingHistory.length})`;
+            } else if (currentTab === 'achievements') {
+                const completedCount = achievements.filter(a => a.completed).length;
+                recipesToShow = achievements;
+                recipesHeader.textContent = `Achievements (${completedCount}/${achievements.length})`;
             } else {
                 const matchingRecipes = getMatchingRecipes();
                 recipesToShow = matchingRecipes;
@@ -1228,7 +1574,7 @@
 
             const recipesList = document.getElementById('recipesList');
 
-            if (recipesToShow.length === 0) {
+            if (recipesToShow.length === 0 && currentTab !== 'achievements') {
                 let emptyMessage;
                 if (currentTab === 'saved') {
                     emptyMessage = 'No saved recipes yet. Click the star icon on any recipe to save it!';
@@ -1247,6 +1593,31 @@
                             '<p class="subtitle">Try adding more ingredients or removing some to see more options.</p>' : ''}
                     </div>
                 `;
+            } else if (currentTab === 'achievements') {
+                recipesList.innerHTML = achievements.map(achievement => {
+                    const progressPercent = (achievement.progress / achievement.maxProgress) * 100;
+                    const statusClass = achievement.completed ? 'completed' : (achievement.progress > 0 ? '' : 'locked');
+                    
+                    return `
+                        <div class="achievement-card ${statusClass}">
+                            <div class="achievement-header">
+                                <div class="achievement-icon ${statusClass}">
+                                    ${achievement.completed ? '✓' : achievement.icon}
+                                </div>
+                                <div class="achievement-info ${statusClass}">
+                                    <h3>${achievement.name}</h3>
+                                    <div class="achievement-description">${achievement.description}</div>
+                                </div>
+                            </div>
+                            <div class="achievement-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill ${statusClass}" style="width: ${progressPercent}%"></div>
+                                </div>
+                                <div class="progress-text">${achievement.progress}/${achievement.maxProgress}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             } else {
                 if (currentTab === 'history') {
                     recipesList.innerHTML = recipesToShow.map(historyEntry => {

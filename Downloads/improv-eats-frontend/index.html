@@ -859,6 +859,296 @@
             background: #8FB9CA;
             color: white;
         }
+
+        /* Timer Integration Styles */
+        .instruction-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 1rem;
+        }
+
+        .timer-btn {
+            padding: 0.5rem 0.75rem;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: background-color 0.2s;
+            min-width: 80px;
+        }
+
+        .timer-btn:hover {
+            background: #059669;
+        }
+
+        .timer-btn.timer-running {
+            background: #f59e0b;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-btn.timer-done {
+            background: #dc2626;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Recipe Scaling Styles */
+        .servings-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .serving-btn {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--bg-button);
+            background: transparent;
+            color: var(--bg-button);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .serving-btn:hover {
+            background: var(--bg-button);
+            color: white;
+        }
+
+        /* Recipe Export Styles */
+        .export-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background-color 0.2s;
+        }
+
+        .export-btn:hover {
+            background: #7c3aed;
+        }
+
+        /* Recipe Notes & Ratings Styles */
+        .notes-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .notes-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-accent);
+        }
+
+        .rating-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .star-rating {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            color: #d1d5db;
+            font-size: 20px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .star-rating:hover,
+        .star-rating.filled {
+            color: #fbbf24;
+        }
+
+        .rating-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-left: 0.5rem;
+        }
+
+        .notes-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            resize: vertical;
+            font-family: inherit;
+            margin-bottom: 1rem;
+        }
+
+        .notes-input:focus {
+            outline: none;
+            border-color: var(--bg-button);
+            box-shadow: 0 0 0 2px rgba(143, 185, 202, 0.2);
+        }
+
+        .notes-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .notes-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .save-notes-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-button);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background-color 0.2s;
+        }
+
+        .save-notes-btn:hover {
+            background: var(--bg-button-hover);
+        }
+
+        .clear-notes-btn {
+            padding: 0.5rem 1rem;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background-color 0.2s;
+        }
+
+        .clear-notes-btn:hover {
+            background: #b91c1c;
+        }
+
+        .existing-notes {
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .existing-notes-text {
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+        }
+
+        .recipe-rating-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 1rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .recipe-rating-display .star-rating {
+            width: 16px;
+            height: 16px;
+            cursor: default;
+            font-size: 14px;
+        }
+
+        .rating-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #f59e0b;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .recipe-content {
+                grid-template-columns: 1fr;
+            }
+
+            .input-section {
+                flex-direction: column;
+            }
+
+            .recipe-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .instruction-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .timer-btn {
+                align-self: flex-end;
+            }
+
+            .servings-controls {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+
+            .notes-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .rating-container {
+                width: 100%;
+            }
+
+            .notes-actions {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1012,6 +1302,32 @@
                         <ol id="detailInstructions" class="instructions-list"></ol>
                     </div>
                 </div>
+
+                <div class="notes-section">
+                    <div class="notes-header">
+                        <h3 class="notes-title">Personal Notes & Rating</h3>
+                        <div class="rating-container">
+                            <span>Your Rating:</span>
+                            <div class="rating-stars" id="ratingStars"></div>
+                            <span class="rating-text" id="ratingText">Not rated</span>
+                        </div>
+                    </div>
+                    
+                    <div id="existingNotes" class="existing-notes hidden">
+                        <div class="existing-notes-text" id="existingNotesText"></div>
+                    </div>
+                    
+                    <textarea 
+                        id="notesInput" 
+                        class="notes-input" 
+                        placeholder="Add your personal notes about this recipe... (cooking tips, modifications, thoughts, etc.)"
+                    ></textarea>
+                    
+                    <div class="notes-actions">
+                        <button onclick="saveRecipeNotes()" class="save-notes-btn">Save Notes</button>
+                        <button onclick="clearRecipeNotes()" class="clear-notes-btn">Clear All</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1022,8 +1338,7 @@
             {
                 id: 1,
                 name: "Spaghetti Carbonara",
-                ingredients: ["spaghetti", "eggs", "bacon", "parmesan cheese", "black pepper"],
-                cookTime: "20 min",
+                ingredients: ["300g spaghetti", "3 eggs", "150g bacon", "100g parmesan cheese", "1 tsp black pepper"],
                 servings: 4,
                 instructions: [
                     "Cook spaghetti according to package directions",
@@ -1031,13 +1346,13 @@
                     "Whisk eggs with parmesan and pepper",
                     "Toss hot pasta with egg mixture and bacon",
                     "Serve immediately with extra cheese"
-                ]
+                ],
+                timers: [12, 8, 2, 3, 0]
             },
             {
                 id: 2,
                 name: "Chicken Stir Fry",
-                ingredients: ["chicken breast", "soy sauce", "garlic", "ginger", "vegetables", "rice"],
-                cookTime: "15 min",
+                ingredients: ["400g chicken breast", "3 tbsp soy sauce", "2 cloves garlic", "1 inch ginger", "300g vegetables", "2 cups rice"],
                 servings: 3,
                 instructions: [
                     "Cut chicken into bite-sized pieces",
@@ -1045,13 +1360,13 @@
                     "Cook chicken until golden",
                     "Add garlic, ginger, and vegetables",
                     "Stir in soy sauce and serve over rice"
-                ]
+                ],
+                timers: [5, 2, 6, 5, 2]
             },
             {
                 id: 3,
                 name: "Tomato Basil Pasta",
-                ingredients: ["pasta", "tomatoes", "basil", "garlic", "olive oil", "parmesan cheese"],
-                cookTime: "25 min",
+                ingredients: ["300g pasta", "4 tomatoes", "1/4 cup basil", "3 cloves garlic", "3 tbsp olive oil", "50g parmesan cheese"],
                 servings: 4,
                 instructions: [
                     "Cook pasta according to package directions",
@@ -1059,13 +1374,13 @@
                     "Add tomatoes and simmer",
                     "Toss with pasta and fresh basil",
                     "Top with parmesan cheese"
-                ]
+                ],
+                timers: [10, 3, 8, 2, 0]
             },
             {
                 id: 4,
                 name: "Scrambled Eggs",
-                ingredients: ["eggs", "butter", "salt", "pepper"],
-                cookTime: "5 min",
+                ingredients: ["4 eggs", "2 tbsp butter", "1/2 tsp salt", "1/4 tsp pepper"],
                 servings: 2,
                 instructions: [
                     "Beat eggs with salt and pepper",
@@ -1073,13 +1388,13 @@
                     "Pour in eggs and gently scramble",
                     "Remove from heat while slightly wet",
                     "Serve immediately"
-                ]
+                ],
+                timers: [1, 1, 3, 0, 0]
             },
             {
                 id: 5,
                 name: "Chicken Caesar Salad",
-                ingredients: ["chicken breast", "lettuce", "parmesan cheese", "croutons", "caesar dressing"],
-                cookTime: "10 min",
+                ingredients: ["300g chicken breast", "1 head lettuce", "50g parmesan cheese", "1 cup croutons", "1/4 cup caesar dressing"],
                 servings: 2,
                 instructions: [
                     "Grill or pan-fry chicken breast",
@@ -1087,13 +1402,13 @@
                     "Slice chicken and add to salad",
                     "Add croutons and parmesan",
                     "Toss with caesar dressing"
-                ]
+                ],
+                timers: [8, 2, 0, 0, 0]
             },
             {
                 id: 6,
                 name: "Vegetable Soup",
-                ingredients: ["vegetables", "broth", "onion", "garlic", "herbs"],
-                cookTime: "30 min",
+                ingredients: ["400g vegetables", "1L broth", "1 onion", "3 cloves garlic", "2 tsp herbs"],
                 servings: 6,
                 instructions: [
                     "Sauté onion and garlic",
@@ -1101,13 +1416,13 @@
                     "Pour in broth and bring to boil",
                     "Simmer until vegetables are tender",
                     "Season with herbs and serve"
-                ]
+                ],
+                timers: [5, 3, 5, 15, 2]
             },
             {
                 id: 7,
                 name: "Grilled Cheese Sandwich",
-                ingredients: ["bread", "cheese", "butter"],
-                cookTime: "8 min",
+                ingredients: ["2 slices bread", "2 slices cheese", "1 tbsp butter"],
                 servings: 1,
                 instructions: [
                     "Butter one side of each bread slice",
@@ -1115,7 +1430,8 @@
                     "Heat pan over medium heat",
                     "Cook sandwich until golden on both sides",
                     "Slice and serve hot"
-                ]
+                ],
+                timers: [1, 0, 2, 4, 1]
             }
         ];
 
@@ -1125,6 +1441,10 @@
         let savedRecipes = [];
         let cookingHistory = [];
         let currentTab = 'all';
+        let currentServings = 1;
+        let activeTimers = {};
+        let timerIntervals = {};
+        let recipeNotes = {}; // Store user notes and ratings for recipes
         let achievements = [
             {
                 id: 'first_recipe',
@@ -1370,6 +1690,7 @@
             if (!recipe) return;
 
             currentRecipe = recipe;
+            currentServings = recipe.servings;
             document.getElementById('mainView').classList.add('hidden');
             document.getElementById('recipeDetailView').classList.remove('hidden');
 
@@ -1386,15 +1707,30 @@
                     Finish Cooking
                 </button>`;
 
+            const userNote = recipeNotes[recipe.id];
+            const ratingDisplay = userNote && userNote.rating ? `
+                <div class="recipe-rating-display">
+                    ${Array.from({length: 5}, (_, i) => 
+                        `<div class="star-rating ${i < userNote.rating ? 'filled' : ''}">★</div>`
+                    ).join('')}
+                    <span class="rating-value">${userNote.rating}/5</span>
+                </div>
+            ` : '';
+
             const metaHtml = `
                 <div class="meta-item">
-                    <i data-lucide="clock"></i>
-                    <span>${recipe.cookTime}</span>
-                </div>
-                <div class="meta-item">
                     <i data-lucide="users"></i>
-                    <span>${recipe.servings} servings</span>
+                    <span id="servingsDisplay">${currentServings} servings</span>
                 </div>
+                <div class="servings-controls">
+                    <button onclick="updateServings(-1)" class="serving-btn">-</button>
+                    <button onclick="updateServings(1)" class="serving-btn">+</button>
+                </div>
+                ${ratingDisplay}
+                <button onclick="exportRecipe(currentRecipe)" class="export-btn">
+                    <i data-lucide="download"></i>
+                    Export Recipe
+                </button>
                 ${actionButton}
             `;
             document.getElementById('detailMeta').innerHTML = metaHtml;
@@ -1409,26 +1745,9 @@
                 document.getElementById('detailMatch').innerHTML = '';
             }
 
-            const ingredientsHtml = recipe.ingredients.map(ingredient => {
-                const isMatched = recipe.matchedIngredients && recipe.matchedIngredients.includes(ingredient);
-                const className = isMatched ? 'ingredient-have' : 'ingredient-need';
-                const status = isMatched ? '✓ Have it' : 'Need to buy';
-                return `
-                    <div class="ingredient-item ${className}">
-                        ${ingredient}
-                        <span class="ingredient-status">${status}</span>
-                    </div>
-                `;
-            }).join('');
-            document.getElementById('detailIngredients').innerHTML = ingredientsHtml;
-
-            const instructionsHtml = recipe.instructions.map((instruction, index) => `
-                <li class="instruction-item">
-                    <span class="instruction-number">${index + 1}</span>
-                    <span class="instruction-text">${instruction}</span>
-                </li>
-            `).join('');
-            document.getElementById('detailInstructions').innerHTML = instructionsHtml;
+            updateRecipeIngredients();
+            updateRecipeInstructions();
+            initializeNotesSection();
 
             lucide.createIcons();
         }
@@ -1518,11 +1837,6 @@
                 uniqueRecipesCooked.add(entry.recipe.id);
                 cookingDates.add(entry.cookedDate.toDateString());
                 
-                const cookTime = parseInt(entry.recipe.cookTime);
-                if (cookTime <= 10) {
-                    fastRecipes.push(entry.recipe.id);
-                }
-                
                 if (entry.recipe.name.toLowerCase().includes('pasta') || entry.recipe.name.toLowerCase().includes('spaghetti')) {
                     pastaRecipes.push(entry.recipe.id);
                 }
@@ -1537,7 +1851,6 @@
             updateAchievement('recipe_master', Math.min(uniqueRecipesCooked.size, 5));
             updateAchievement('ingredient_explorer', Math.min(uniqueIngredients.size, 10));
             updateAchievement('star_collector', Math.min(savedRecipes.length, 3));
-            updateAchievement('speed_cook', Math.min(fastRecipes.length, 3));
             updateAchievement('pasta_lover', Math.min(pastaRecipes.length, 2));
             updateAchievement('healthy_eater', Math.min(saladRecipes.length, 1));
             updateAchievement('cooking_streak', Math.min(cookingDates.size, 3));
@@ -1707,10 +2020,6 @@
                                 </div>
                                 <div class="recipe-meta">
                                     <div class="meta-item">
-                                        <i data-lucide="clock"></i>
-                                        <span>${recipe.cookTime}</span>
-                                    </div>
-                                    <div class="meta-item">
                                         <i data-lucide="users"></i>
                                         <span>${recipe.servings} servings</span>
                                     </div>
@@ -1756,10 +2065,6 @@
 
                                 <div class="recipe-meta">
                                     <div class="meta-item">
-                                        <i data-lucide="clock"></i>
-                                        <span>${recipe.cookTime}</span>
-                                    </div>
-                                    <div class="meta-item">
                                         <i data-lucide="users"></i>
                                         <span>${recipe.servings} servings</span>
                                     </div>
@@ -1795,7 +2100,7 @@
             themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
         }
 
-        function initializeTheme() {
+         function initializeTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             
@@ -1805,9 +2110,308 @@
             }
         }
 
+        // Timer functions
+        function startTimer(stepIndex, minutes) {
+            if (!currentRecipe || !currentRecipe.timers) return;
+            
+            const timerId = `timer-${currentRecipe.id}-${stepIndex}`;
+            
+            // If timer is already running, stop it
+            if (activeTimers[timerId]) {
+                clearInterval(timerIntervals[timerId]);
+                delete activeTimers[timerId];
+                delete timerIntervals[timerId];
+                updateTimerButton(stepIndex, currentRecipe.timers[stepIndex]);
+                return;
+            }
+
+            let totalSeconds = minutes * 60;
+            activeTimers[timerId] = totalSeconds;
+            
+            const interval = setInterval(() => {
+                activeTimers[timerId]--;
+                
+                if (activeTimers[timerId] <= 0) {
+                    clearInterval(interval);
+                    delete activeTimers[timerId];
+                    delete timerIntervals[timerId];
+                    
+                    // Timer done
+                    updateTimerButton(stepIndex, 0, true);
+                    
+                    // Show notification
+                    if (Notification.permission === 'granted') {
+                        new Notification('Timer Done!', {
+                            body: `Step ${stepIndex + 1} timer completed`,
+                            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⏰</text></svg>'
+                        });
+                    } else {
+                        alert(`⏰ Timer Done! Step ${stepIndex + 1} completed`);
+                    }
+                    
+                    // Auto-reset after 5 seconds
+                    setTimeout(() => {
+                        updateTimerButton(stepIndex, currentRecipe.timers[stepIndex]);
+                    }, 5000);
+                } else {
+                    updateTimerButton(stepIndex, activeTimers[timerId], false, true);
+                }
+            }, 1000);
+            
+            timerIntervals[timerId] = interval;
+            updateTimerButton(stepIndex, totalSeconds, false, true);
+            
+            // Request notification permission
+            if (Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        }
+
+        function updateTimerButton(stepIndex, timeValue, isDone = false, isRunning = false) {
+            const button = document.querySelector(`#timer-btn-${stepIndex}`);
+            if (!button) return;
+            
+            if (isDone) {
+                button.textContent = 'Done!';
+                button.className = 'timer-btn timer-done';
+            } else if (isRunning) {
+                const mins = Math.floor(timeValue / 60);
+                const secs = timeValue % 60;
+                button.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                button.className = 'timer-btn timer-running';
+            } else {
+                const originalMinutes = currentRecipe && currentRecipe.timers ? currentRecipe.timers[stepIndex] : 0;
+                button.textContent = originalMinutes > 0 ? `${originalMinutes}m` : 'Timer';
+                button.className = 'timer-btn';
+            }
+        }
+
+        // Recipe scaling functions
+        function scaleRecipe(recipe, newServings) {
+            const scale = newServings / recipe.servings;
+            
+            return {
+                ...recipe,
+                servings: newServings,
+                scaledIngredients: recipe.ingredients.map(ingredient => {
+                    // Try to extract numbers and scale them
+                    const numberMatch = ingredient.match(/(\d+(?:\.\d+)?)\s*(\w+)?\s+(.*)/);
+                    if (numberMatch) {
+                        const [, amount, unit, name] = numberMatch;
+                        const scaledAmount = (parseFloat(amount) * scale).toFixed(1).replace('.0', '');
+                        return `${scaledAmount}${unit ? ' ' + unit : ''} ${name}`;
+                    }
+                    return ingredient;
+                })
+            };
+        }
+
+        function updateServings(change) {
+            const newServings = Math.max(1, currentServings + change);
+            currentServings = newServings;
+            
+            if (currentRecipe) {
+                document.getElementById('servingsDisplay').textContent = `${currentServings} servings`;
+                updateRecipeIngredients();
+            }
+        }
+
+        // Recipe Notes & Rating Functions
+        function initializeNotesSection() {
+            if (!currentRecipe) return;
+            
+            const userNote = recipeNotes[currentRecipe.id];
+            
+            // Initialize rating stars
+            initializeRatingStars(userNote ? userNote.rating : 0);
+            
+            // Load existing notes
+            const notesInput = document.getElementById('notesInput');
+            const existingNotes = document.getElementById('existingNotes');
+            const existingNotesText = document.getElementById('existingNotesText');
+            
+            if (userNote && userNote.notes) {
+                existingNotesText.textContent = userNote.notes;
+                existingNotes.classList.remove('hidden');
+                notesInput.value = userNote.notes;
+            } else {
+                existingNotes.classList.add('hidden');
+                notesInput.value = '';
+            }
+        }
+
+        function initializeRatingStars(currentRating = 0) {
+            const ratingStars = document.getElementById('ratingStars');
+            const ratingText = document.getElementById('ratingText');
+            
+            ratingStars.innerHTML = '';
+            
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement('div');
+                star.className = `star-rating ${i <= currentRating ? 'filled' : ''}`;
+                star.style.cursor = 'pointer';
+                star.innerHTML = '★';
+                star.onclick = () => setRating(i);
+                ratingStars.appendChild(star);
+            }
+            
+            updateRatingText(currentRating);
+        }
+
+        function setRating(rating) {
+            if (!currentRecipe) return;
+            
+            if (!recipeNotes[currentRecipe.id]) {
+                recipeNotes[currentRecipe.id] = {};
+            }
+            
+            recipeNotes[currentRecipe.id].rating = rating;
+            saveNotesToStorage();
+            initializeRatingStars(rating);
+            
+            // Update meta display
+            showRecipeDetail(currentRecipe.id);
+        }
+
+        function updateRatingText(rating) {
+            const ratingText = document.getElementById('ratingText');
+            if (rating === 0) {
+                ratingText.textContent = 'Not rated';
+            } else {
+                const ratingLabels = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+                ratingText.textContent = `${rating}/5 - ${ratingLabels[rating]}`;
+            }
+        }
+
+        function saveRecipeNotes() {
+            if (!currentRecipe) return;
+            
+            const notesInput = document.getElementById('notesInput');
+            const notes = notesInput.value.trim();
+            
+            if (!recipeNotes[currentRecipe.id]) {
+                recipeNotes[currentRecipe.id] = {};
+            }
+            
+            if (notes) {
+                recipeNotes[currentRecipe.id].notes = notes;
+                saveNotesToStorage();
+                initializeNotesSection();
+                alert('Notes saved successfully!');
+            } else {
+                alert('Please enter some notes before saving.');
+            }
+        }
+
+        function clearRecipeNotes() {
+            if (!currentRecipe) return;
+            
+            if (confirm('Are you sure you want to clear all notes and rating for this recipe?')) {
+                delete recipeNotes[currentRecipe.id];
+                saveNotesToStorage();
+                initializeNotesSection();
+                
+                // Update meta display to remove rating
+                showRecipeDetail(currentRecipe.id);
+                
+                alert('Notes and rating cleared successfully!');
+            }
+        }
+
+        function saveNotesToStorage() {
+            try {
+                localStorage.setItem('recipeNotes', JSON.stringify(recipeNotes));
+            } catch (e) {
+                console.warn('Could not save notes to localStorage:', e);
+            }
+        }
+
+        function loadNotesFromStorage() {
+            try {
+                const saved = localStorage.getItem('recipeNotes');
+                if (saved) {
+                    recipeNotes = JSON.parse(saved);
+                }
+            } catch (e) {
+                console.warn('Could not load notes from localStorage:', e);
+                recipeNotes = {};
+            }
+        }
+
+        function updateRecipeIngredients() {
+            if (!currentRecipe) return;
+            
+            const scaledRecipe = scaleRecipe(currentRecipe, currentServings);
+            
+            const ingredientsHtml = scaledRecipe.scaledIngredients.map(ingredient => {
+                const isMatched = currentRecipe.matchedIngredients && 
+                    currentRecipe.matchedIngredients.some(matched => ingredient.includes(matched.split(' ').pop()));
+                const className = isMatched ? 'ingredient-have' : 'ingredient-need';
+                const status = isMatched ? '✓ Have it' : 'Need to buy';
+                return `
+                    <div class="ingredient-item ${className}">
+                        ${ingredient}
+                        <span class="ingredient-status">${status}</span>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('detailIngredients').innerHTML = ingredientsHtml;
+        }
+
+        function updateRecipeInstructions() {
+            if (!currentRecipe) return;
+            
+            const instructionsHtml = currentRecipe.instructions.map((instruction, index) => {
+                const timerMinutes = currentRecipe.timers ? currentRecipe.timers[index] : 0;
+                const timerButton = timerMinutes > 0 ? 
+                    `<button id="timer-btn-${index}" class="timer-btn" onclick="startTimer(${index}, ${timerMinutes})">
+                        ${timerMinutes}m
+                    </button>` : '';
+                
+                return `
+                    <li class="instruction-item">
+                        <span class="instruction-number">${index + 1}</span>
+                        <div class="instruction-content">
+                            <span class="instruction-text">${instruction}</span>
+                            ${timerButton}
+                        </div>
+                    </li>
+                `;
+            }).join('');
+            document.getElementById('detailInstructions').innerHTML = instructionsHtml;
+        }
+
+        // Export recipe function
+        function exportRecipe(recipe) {
+            const scaledRecipe = scaleRecipe(recipe, currentServings);
+            
+            const recipeText = `${scaledRecipe.name}
+
+Servings: ${scaledRecipe.servings}
+
+Ingredients:
+${scaledRecipe.scaledIngredients.map(ing => `- ${ing}`).join('\n')}
+
+Instructions:
+${scaledRecipe.instructions.map((inst, index) => `${index + 1}. ${inst}`).join('\n')}
+
+Recipe from ImprovEats Recipe Finder`;
+
+            const blob = new Blob([recipeText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${recipe.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_recipe.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
         // Initialize - show login page first
         document.addEventListener('DOMContentLoaded', function() {
             initializeTheme();
+            loadNotesFromStorage();
             lucide.createIcons();
         });
     </script>

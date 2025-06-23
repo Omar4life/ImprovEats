@@ -11,18 +11,15 @@ app.post('/api/generate', async (req, res) => {
   const prompt = `Give me a full recipe (title, ingredients, and step-by-step instructions) using: ${ingredients.join(', ')}`;
 
   try {
-    const response = await axios.post('https://api.aivvm.com/v1/chat/completions', {
+    const response = await axios.post('https://freegpt-replit-api.rigorz.repl.co/v1/chat/completions', {
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }]
     });
 
     const recipe = response.data.choices?.[0]?.message?.content;
+    if (!recipe) return res.status(500).json({ error: 'Invalid GPT response' });
 
-    if (!recipe) {
-      res.status(500).json({ error: 'Invalid response from GPT proxy' });
-    } else {
-      res.json({ recipe });
-    }
+    res.json({ recipe });
   } catch (err) {
     console.error('GPT Proxy ERROR:', err.message);
     res.status(500).json({ error: err.message });
@@ -30,5 +27,5 @@ app.post('/api/generate', async (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('✅ Free GPT proxy server running at http://localhost:3000');
+  console.log('✅ Server running at http://localhost:3000');
 });

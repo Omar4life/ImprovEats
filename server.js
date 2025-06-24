@@ -6,26 +6,61 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const GEMINI_API_KEY = 'AIzaSyDoPy44jQSBQoU_d8YBHOT0s4SgfeXWANI';
+
 app.post('/api/generate', async (req, res) => {
   const { ingredients } = req.body;
-  const prompt = `Give me a full recipe (title, ingredients, and step-by-step instructions) using: ${ingredients.join(', ')}`;
+
+  const prompt = `
+You are a professional recipe generator. Based only on these ingredients: ${ingredients.join(', ')}, generate a short, clean recipe and return it in this exact JSON format:
+
+{
+  "title": "Recipe title",
+  "yield": "2 servings",
+  "ingredients": [
+    "each ingredient as a string"
+  ],
+  "instructions": [
+    "each cooking step as a short string"
+  ]
+}
+
+Only return valid JSON. Do not explain anything. No markdown. No bullet points. No headings. No text before or after the JSON. Just return pure JSON.
+`;
 
   try {
-    const response = await axios.post('https://freegpt-replit-api.rigorz.repl.co/v1/chat/completions', {
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }]
-    });
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: prompt }]
+          }
+        ]
+      }
+    );
 
-    const recipe = response.data.choices?.[0]?.message?.content;
-    if (!recipe) return res.status(500).json({ error: 'Invalid GPT response' });
+    console.log('Gemini RAW:', JSON.stringify(response.data, null, 2));
 
-    res.json({ recipe });
+    const raw = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    
+    const cleanJSON = raw.replace(/```json|```/g, '').trim();
+
+    const parsed = JSON.parse(cleanJSON);
+
+    if (!parsed || !parsed.title || !parsed.ingredients || !parsed.instructions) {
+      return res.status(500).json({ error: 'No recipe returned' });
+    }
+
+    res.json(parsed);
   } catch (err) {
-    console.error('GPT Proxy ERROR:', err.message);
-    res.status(500).json({ error: err.message });
+    console.error('Gemini API ERROR:', err.response?.data || err.message);
+    res.status(500).json({ error: 'Failed to parse recipe JSON from Gemini.' });
   }
 });
 
-app.listen(3000, () => {
-  console.log('✅ Server running at http://localhost:3000');
+app.listen(3011, () => {
+  console.log('✅ Gemini AI server running at http://localhost:3011');
 });

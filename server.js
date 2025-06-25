@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const GEMINI_API_KEY = 'AIzaSyDoPy44jQSBQoU_d8YBHOT0s4SgfeXWANI';
+const GEMINI_API_KEY = 'add your gemini apy key Im hiding mine';
 
 app.post('/api/generate', async (req, res) => {
   const { ingredients } = req.body;
@@ -45,7 +45,7 @@ Only return valid JSON. Do not explain anything. No markdown. No bullet points. 
 
     const raw = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    
+    // ✅ Remove ```json and ``` and trim whitespace
     const cleanJSON = raw.replace(/```json|```/g, '').trim();
 
     const parsed = JSON.parse(cleanJSON);
@@ -61,6 +61,6 @@ Only return valid JSON. Do not explain anything. No markdown. No bullet points. 
   }
 });
 
-app.listen(3011, () => {
-  console.log('✅ Gemini AI server running at http://localhost:3011');
+app.listen(3016, () => {
+  console.log('✅ Gemini AI server running at http://localhost:3016');
 });

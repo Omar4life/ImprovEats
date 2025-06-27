@@ -6,7 +6,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const GEMINI_API_KEY = 'add your gemini apy key Im hiding mine';
+
+const GEMINI_API_KEY = 'hiding api key';
 
 app.post('/api/generate', async (req, res) => {
   const { ingredients } = req.body;
@@ -25,7 +26,7 @@ You are a professional recipe generator. Based only on these ingredients: ${ingr
   ]
 }
 
-Only return valid JSON. Do not explain anything. No markdown. No bullet points. No headings. No text before or after the JSON. Just return pure JSON.
+Only return valid JSON. Do not explain anything. No markdown. No headings. No text before or after the JSON. Just return pure JSON.
 `;
 
   try {
@@ -41,11 +42,9 @@ Only return valid JSON. Do not explain anything. No markdown. No bullet points. 
       }
     );
 
-    console.log('Gemini RAW:', JSON.stringify(response.data, null, 2));
-
     const raw = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    // ✅ Remove ```json and ``` and trim whitespace
+    // ✅ Remove markdown if Gemini wraps JSON in ```json ... ```
     const cleanJSON = raw.replace(/```json|```/g, '').trim();
 
     const parsed = JSON.parse(cleanJSON);
@@ -61,6 +60,7 @@ Only return valid JSON. Do not explain anything. No markdown. No bullet points. 
   }
 });
 
-app.listen(3016, () => {
-  console.log('✅ Gemini AI server running at http://localhost:3016');
+
+app.listen(3019, () => {
+  console.log('✅ Gemini AI server running at http://localhost:3019');
 });

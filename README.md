@@ -4,3 +4,5 @@ ImprovEats is a smart recipe assistant that helps you make delicious recipes usi
 
 
 http://neighborhood.hackclub.com/
+
+![nhbadge](https://img.shields.io/badge/made%20for%20neighborhood-bf8f73?style=for-the-badge&logo=hackclub&logoColor=ffffff)

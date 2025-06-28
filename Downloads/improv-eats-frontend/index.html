@@ -2507,46 +2507,75 @@ Recipe from ImprovEats Recipe Finder`;
         }
 
         // AI Recipe Generation Functions
+function renderRecipeCard(recipe) {
+  const container = document.getElementById('recipesContainer');
+
+  const card = document.createElement('div');
+  card.className = 'recipe-card';
+  if (recipe.isAiGenerated) card.classList.add('ai-generated');
+
+  card.innerHTML = `
+    <h2>${recipe.name}</h2>
+    <p>${recipe.servings} servings</p>
+    <div class="recipe-info">
+      <div class="ingredients">
+        <h3>Ingredients</h3>
+        <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+      </div>
+      <div class="instructions">
+        <h3>Instructions</h3>
+        <ol>${recipe.instructions.map((s, i) => `<li>${s}</li>`).join('')}</ol>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(card);
+}
+
         async function generateAIRecipe() {
-    if (isGeneratingRecipe || userIngredients.length === 0) return;
+    if (isGeneratingRecipe) return;
     isGeneratingRecipe = true;
 
     const btn = document.getElementById('aiGenerateBtn');
+    const text = document.getElementById('aiGenerateText');
     btn.disabled = true;
-    btn.innerHTML = `<span class="loading-spinner"></span> Generating...`;
+    text.innerHTML = '<span class="loading-spinner"></span> Generating...';
 
     try {
-        const res = await fetch('http://localhost:3000/api/generate', {
+        const response = await fetch('http://localhost:3020/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ingredients: userIngredients })
         });
 
-        const data = await res.json();
-if (!data.recipe) throw new Error(data.error || "No recipe returned");
+        const recipe = await response.json();
 
+        if (!recipe || !recipe.title) throw new Error('Invalid recipe returned');
 
         const newRecipe = {
-            id: nextRecipeId++,
-            name: "AI Recipe",
-            ingredients: userIngredients.map(i => i),
-            instructions: data.recipe.split('\n'),
-            servings: 2,
-            timers: [],
-            isAiGenerated: true
-        };
+  id: nextRecipeId++,
+  name: recipe.title,
+  servings: parseInt(recipe.yield) || 2,
+  ingredients: recipe.ingredients || [],
+  instructions: recipe.instructions || [],
+  timers: Array(recipe.instructions?.length || 0).fill(0),
+  isAiGenerated: true,
+  isUnscalable: true // 👈 NEW FLAG
+};
 
         recipes.unshift(newRecipe);
         updateDisplay();
+        showRecipeDetail(newRecipe.id);
     } catch (err) {
-        alert("Error generating recipe.");
+        alert('❌ Failed to generate recipe. Please try again.');
         console.error(err);
+    } finally {
+        isGeneratingRecipe = false;
+        btn.disabled = false;
+        text.innerHTML = '🤖 Generate AI Recipe';
     }
-
-    btn.disabled = false;
-    btn.innerHTML = `🤖 Generate AI Recipe`;
-    isGeneratingRecipe = false;
 }
+
 
         async function createAIRecipe(ingredients) {
             // Simulate AI recipe generation with realistic delay
@@ -3201,5 +3230,8 @@ if (!data.recipe) throw new Error(data.error || "No recipe returned");
             lucide.createIcons();
         });
     </script>
+    <!-- AI Recipe Output -->
+<div id="recipesContainer"></div>
+
 </body>
 </html>

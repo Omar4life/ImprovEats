@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 
-const GEMINI_API_KEY = 'hiding api key';
+const GEMINI_API_KEY = 'put api key';
 
 app.post('/api/generate', async (req, res) => {
   const { ingredients } = req.body;
@@ -61,6 +61,6 @@ Only return valid JSON. Do not explain anything. No markdown. No headings. No te
 });
 
 
-app.listen(3019, () => {
-  console.log('✅ Gemini AI server running at http://localhost:3019');
+app.listen(3022, () => {
+  console.log('✅ Gemini AI server running at http://localhost:3022');
 });
